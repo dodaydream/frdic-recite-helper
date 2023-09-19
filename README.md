@@ -2,6 +2,8 @@
 
 This is a helper project for [Frdic Recite](https://www.frdic.com/recite/online), adding support for syllable segmentation and relevant images to help memorize French words.
 
+![Screenshot](./screenshots/helper.png)
+
 ## Getting Start
 
 This project contains two parts, the backend and the Tampermonkey script. To get started, clone this repo first.
@@ -28,3 +30,13 @@ node server.js
 Finally, install the Tampermonkey script, and then you are good to go.
 
 Bonne chance!
+
+## Acknowledgement
+
+[Lexique](http://www.lexique.org)
+
+[googlethis](https://www.npmjs.com/package/googlethis)
+
+## License
+
+[MIT license](https://opensource.org/licenses/MIT).
