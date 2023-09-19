@@ -1,4 +1,10 @@
 {
+  "name": "frdic-recite-helper",
+  "author": "Stanley Cao <contact@stanleytsau.me>",
+  "license": "MIT",
+  "scripts": {
+      "serve": "node server.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
