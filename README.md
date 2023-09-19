@@ -16,6 +16,9 @@ Then install the dependencies
 yarn install
 ```
 
+Import the [Lexique](http://www.lexique.org/) dataset to get syllable segmentation, you can download it from [here](http://www.lexique.org/databases/Lexique383/Lexique383.zip). After finishing the download, extract and place `Lexique383.tsv` inside the `lexique` directory.
+
+
 Start the backend service
 
 ```bash

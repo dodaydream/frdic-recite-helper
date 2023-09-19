@@ -9,7 +9,7 @@ const port = 3000;
 app.use(cors())
 
 app.get('/search', (req, res) => {
-  const filePath = 'Lexique383.tsv';
+  const filePath = 'lexique/Lexique383.tsv';
   const searchWord = req.query.q
 
   const stream = fs.createReadStream(filePath, { encoding: 'utf-8' });
