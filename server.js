@@ -69,19 +69,31 @@ app.get('/etymology', async (req, res) => {
   const ENDPOINT = `https://etymologeek.com/fra/${searchWord}`
   const BASEURL = 'https://etymologeek.com'
 
-  const document = await fetch(ENDPOINT).then(response => response.text()).then(text => parse(text));
+  const response = await fetch(ENDPOINT)
+
+  // check if the response is ok
+  if (response.status !== 200) {
+    res.json({
+      pi: null,
+      details: null
+    })
+
+    return;
+  }
+  
+  const document = await response.text().then(text => parse(text))
 
   const obj = document.querySelector('#pi');
 
   const tbl = document.querySelector('#tb');
 
-  const etymologies = tbl.querySelectorAll('tr').map(tr => {
+  const etymologies = tbl ? tbl.querySelectorAll('tr').map(tr => {
     const tds = tr.querySelectorAll('td');
     return {
       entry: tds[0].text,
       def: tds[2].text
     }
-  })
+  }) : null
 
   res.json({
     pi: obj ? BASEURL + obj.getAttribute('data') : null,
