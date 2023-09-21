@@ -1,11 +1,16 @@
 // ==UserScript==
 // @name         FrdicReciteLex
-// @namespace    http://tampermonkey.net/
+// @namespace    https://stanleytsau.me
 // @version      0.1
-// @description  try to take over the world!
+// @description  Adding support for syllable segmentation and relevant images to help memorize French words on Frdic Recite
 // @author       Stanley Cao
+// @homepage     https://github.com/dodaydream/frdic-recite-helper
+// @supportURL   https://github.com/dodaydream/frdic-recite-helper/issues
 // @match        https://www.frdic.com/areas/recite/fr/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @license      MIT
+// @updateURL    https://raw.githubusercontent.com/dodaydream/frdic-recite-helper/main/plugin.js
+// @downloadURL  https://raw.githubusercontent.com/dodaydream/frdic-recite-helper/main/plugin.js
 // @grant        none
 // ==/UserScript==
 
@@ -104,6 +109,7 @@ const fadeInKeyframes = [
         if (etymology.pi) {
             const pi = document.createElement('img')
             pi.src = etymology.pi
+            pi.style.maxWidth = '50%'
 
             div.appendChild(pi)
         }
