@@ -3,9 +3,10 @@ const readline = require('readline');
 const fs = require('fs');
 const cors = require('cors');
 const google = require('googlethis');
-
 const app = express();
-const port = 3000;
+const { parse } = require('node-html-parser');
+
+const PORT = 3000;
 app.use(cors())
 
 app.get('/search', (req, res) => {
@@ -27,16 +28,18 @@ app.get('/search', (req, res) => {
 });
 
 app.get('/images', async (req, res) => {
-    const searchWord = req.query.q
+  const searchWord = req.query.q
+  const illustration = req.query.i ?? false
 
-    const images = await google.image(searchWord, { safe: false,
-          additional_params: {
-    hl: 'fr',
-              lr: 'fr'
-  }
-    });
+  const images = await google.image(searchWord + (illustration ? ' illustration' : ''), {
+    safe: false,
+    additional_params: {
+      hl: 'fr',
+      lr: 'fr'
+    }
+  });
 
-      try {
+  try {
     const promises = images.slice(0, 3).map(async (item) => {
       const response = await fetch(item.preview.url);
       const buffer = await response.arrayBuffer();
@@ -55,12 +58,37 @@ app.get('/images', async (req, res) => {
 
     res.json(results);
   } catch (error) {
-      console.log(error)
+    console.log(error)
     res.status(500).json({ error: 'An error occurred' });
   }
-
 })
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.get('/etymology', async (req, res) => {
+  const searchWord = req.query.q
+
+  const ENDPOINT = `https://etymologeek.com/fra/${searchWord}`
+  const BASEURL = 'https://etymologeek.com'
+
+  const document = await fetch(ENDPOINT).then(response => response.text()).then(text => parse(text));
+
+  const obj = document.querySelector('#pi');
+
+  const tbl = document.querySelector('#tb');
+
+  const etymologies = tbl.querySelectorAll('tr').map(tr => {
+    const tds = tr.querySelectorAll('td');
+    return {
+      entry: tds[0].text,
+      def: tds[2].text
+    }
+  })
+
+  res.json({
+    pi: obj ? BASEURL + obj.getAttribute('data') : null,
+    details: etymologies
+  })
+})
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

@@ -19,12 +19,10 @@ const fadeInKeyframes = [
 (function() {
     'use strict';
 
-    const BTN = 'div.exam-container div.options-container button';
     const WORD = '.explain-title'
 
     let currentWord = ''
     let currentWordElem = null
-    let handler = null;
 
     // periodically check existence of button
     setInterval(async () => {
@@ -37,8 +35,6 @@ const fadeInKeyframes = [
 
         if (currentWord == currentWordElem.innerText) return
 
-        clearTimeout(handler);
-
         currentWord = currentWordElem.innerText
 
         currentWordElem.animate(fadeInKeyframes, {
@@ -46,10 +42,13 @@ const fadeInKeyframes = [
             fill: 'forwards' // Keeps the final state of the animation
         });
 
+        const container = document.createElement('div')
+        currentWordElem.parentNode.insertBefore(container, currentWordElem.nextSibling)
 
-        const newElem = document.createElement('span')
+        const newElem = document.createElement('div')
+        newElem.style.paddingBottom = '1rem'
         newElem.innerText = '--'
-        currentWordElem.parentNode.insertBefore(newElem, currentWordElem.nextSibling)
+        container.appendChild(newElem)
 
         newElem.animate(fadeInKeyframes, {
             duration: 6000, // Animation duration in milliseconds
@@ -74,7 +73,7 @@ const fadeInKeyframes = [
         const pos = parsed[0][3]
 
         if (pos == 'NOM' || pos == 'VER') {
-            const imgResponse = await fetch("http://localhost:3000/images?q=" + currentWord)
+            const imgResponse = await fetch("http://localhost:3000/images?q=" + currentWord + '&i=true')
 
             const images = await imgResponse.json();
 
@@ -82,26 +81,58 @@ const fadeInKeyframes = [
             previewContainer.style.display = 'flex';
             previewContainer.style.alignItems = 'center';
             previewContainer.style.overflow = 'auto';
+            previewContainer.style.paddingBottom = '1rem'
 
             images.forEach((preview) => {
                 const image = new Image();
                 image.src = preview.preview.url;
                 image.style.width = '33%'
+                image.style.maxHeight = '180px'
                 image.alt = preview.origin.title;
                 image.title = preview.origin.title;
                 previewContainer.appendChild(image);
             });
 
-            currentWordElem.parentNode.insertBefore(previewContainer, newElem.nextSibling)
+            container.appendChild(previewContainer)
         }
 
+        const etymology = await fetch("http://localhost:3000/etymology?q=" + currentWord).then(response => response.json())
 
-        console.log(parsed[0][27])
+        const div = document.createElement('div')
+        div.style.display = 'flex';
 
-        handler = setTimeout(() => {
-            // currentWordElem.style.background = 'unset'
-           //  newElem.innerText = parsed[0][27]
-        }, 5000)
+        if (etymology.pi) {
+            const pi = document.createElement('img')
+            pi.src = etymology.pi
 
+            div.appendChild(pi)
+        }
+
+        if (etymology.details) {
+            const table = document.createElement('table')
+            table.style.marginLeft = '1rem'
+
+            const tbody = document.createElement('tbody')
+
+            etymology.details.forEach((detail) => {
+                const tr = document.createElement('tr')
+
+                const first = document.createElement('td')
+                first.innerText = detail.entry
+                const second = document.createElement('td')
+                second.innerText = detail.def
+
+                tr.appendChild(first)
+                tr.appendChild(second)
+
+                tbody.appendChild(tr)
+            })
+
+            table.appendChild(tbody)
+
+            div.appendChild(table)
+        }
+
+        container.appendChild(div)
     }, 200)
 })();

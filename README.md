@@ -37,6 +37,8 @@ Bonne chance!
 
 [googlethis](https://www.npmjs.com/package/googlethis)
 
+[etymologeek](https://etymologeek.com/)
+
 ## License
 
 [MIT license](https://opensource.org/licenses/MIT).
