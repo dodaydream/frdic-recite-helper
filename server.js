@@ -66,8 +66,8 @@ app.get('/images', async (req, res) => {
 app.get('/etymology', async (req, res) => {
   const searchWord = req.query.q
 
-  const ENDPOINT = `https://etymologeek.com/fra/${searchWord}`
-  const BASEURL = 'https://etymologeek.com'
+  const ENDPOINT = `https://cooljugator.com/etymology/fr/${searchWord}`
+  const BASEURL = 'https://cooljugator.com'
 
   const response = await fetch(ENDPOINT)
 
@@ -78,17 +78,20 @@ app.get('/etymology', async (req, res) => {
       details: null
     })
 
+    console.log("[Etymology] for " + searchWord + " not found")
+
     return;
   }
-  
+
   const document = await response.text().then(text => parse(text))
 
   const obj = document.querySelector('#pi');
 
-  const tbl = document.querySelector('#tb');
+  const tbl = document.querySelector('#example-sentences tbody');
 
   const etymologies = tbl ? tbl.querySelectorAll('tr').map(tr => {
     const tds = tr.querySelectorAll('td');
+
     return {
       entry: tds[0].text,
       def: tds[2].text

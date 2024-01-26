@@ -37,7 +37,7 @@ Bonne chance!
 
 [googlethis](https://www.npmjs.com/package/googlethis)
 
-[etymologeek](https://etymologeek.com/)
+[cooljugator](https://cooljugator.com/) (previously: [etymologeek](https://etymologeek.com/))
 
 ## License
 
